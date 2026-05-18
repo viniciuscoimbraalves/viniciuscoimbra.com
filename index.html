@@ -228,6 +228,36 @@
         themeToggle.addEventListener('click', () => {
             setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         });
+
+        const emailBtn = document.getElementById('emailBtn');
+        const emailModal = document.getElementById('emailModal');
+        const modalClose = document.getElementById('modalClose');
+        const copyBtn = document.getElementById('copyBtn');
+
+        emailBtn.addEventListener('click', () => {
+            emailModal.classList.add('active');
+        });
+
+        function closeModal() {
+            emailModal.classList.remove('active');
+            copyBtn.textContent = 'Copiar endereço';
+            copyBtn.classList.remove('copied');
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        emailModal.addEventListener('click', (e) => {
+            if (e.target === emailModal) closeModal();
+        });
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText('contato@viniciuscoimbra.com');
+                copyBtn.textContent = 'Copiado!';
+                copyBtn.classList.add('copied');
+            } catch {
+                copyBtn.textContent = 'Erro ao copiar';
+            }
+        });
     </script>
 </body>
 </html>
