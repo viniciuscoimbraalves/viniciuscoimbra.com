@@ -129,9 +129,17 @@
         <a href="https://gauchazh.clicrbs.com.br/autores/vinicius-coimbra/625dc07ba43c78173ccd1423.html" target="_blank" rel="noopener noreferrer" class="link-btn" aria-label="GaúchaZH">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         </a>
-        <a href="mailto:contato@viniciuscoimbra.com" class="link-btn" aria-label="E-mail">
+        <button class="link-btn" id="emailBtn" aria-label="E-mail">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
-        </a>
+        </button>
+        </div>
+
+        <div class="modal-overlay" id="emailModal">
+            <div class="modal">
+                <p class="modal-email">contato@viniciuscoimbra.com</p>
+                <button class="modal-btn" id="copyBtn">Copiar endereço</button>
+                <button class="modal-close" id="modalClose">Fechar</button>
+            </div>
         </div>
     </div>
 
