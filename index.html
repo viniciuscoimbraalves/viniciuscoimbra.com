@@ -109,69 +109,27 @@
             .theme-toggle svg { width: 28px; height: 28px; }
         }
 
-        .modal-overlay {
-            display: none;
+        .toast {
             position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(1rem);
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            min-width: 280px;
-        }
-
-        .modal-email {
-            font-size: 1.1rem;
-            margin-bottom: 1.25rem;
-            color: var(--text);
-        }
-
-        .modal-btn {
-            display: block;
-            width: 100%;
-            padding: 0.6rem 1rem;
-            border: 1px solid var(--border);
             border-radius: 8px;
-            background: var(--card-bg);
-            color: var(--text);
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-btn:hover {
-            background: var(--border);
-        }
-
-        .modal-btn.copied {
-            background: #1a5a2a;
-            border-color: #2a8a3a;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
+            padding: 0.6rem 1.2rem;
             font-size: 0.85rem;
-            cursor: pointer;
-            padding: 0.4rem;
+            color: var(--text);
+            opacity: 0;
+            transition: opacity 0.25s, transform 0.25s;
+            pointer-events: none;
+            z-index: 100;
+            white-space: nowrap;
         }
 
-        .modal-close:hover {
-            color: var(--text);
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
