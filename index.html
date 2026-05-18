@@ -255,22 +255,24 @@
 
         const emailBtn = document.getElementById('emailBtn');
         const popover = document.getElementById('emailPopover');
-        const copyBtn = document.getElementById('copyBtn');
 
         emailBtn.addEventListener('click', (e) => {
             e.preventDefault();
             popover.classList.toggle('show');
         });
 
-        copyBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            try {
-                await navigator.clipboard.writeText('contato@viniciuscoimbra.com');
-                copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-                setTimeout(() => {
-                    copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-                }, 1500);
-            } catch {}
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const email = btn.getAttribute('data-email');
+                try {
+                    await navigator.clipboard.writeText(email);
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+                    }, 1500);
+                } catch {}
+            });
         });
 
         document.addEventListener('click', (e) => {
