@@ -108,6 +108,71 @@
             .link-btn svg { width: 28px; height: 28px; }
             .theme-toggle svg { width: 28px; height: 28px; }
         }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            min-width: 280px;
+        }
+
+        .modal-email {
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            color: var(--text);
+        }
+
+        .modal-btn {
+            display: block;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-btn:hover {
+            background: var(--border);
+        }
+
+        .modal-btn.copied {
+            background: #1a5a2a;
+            border-color: #2a8a3a;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 0.4rem;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
