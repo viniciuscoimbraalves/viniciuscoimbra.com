@@ -182,33 +182,18 @@
         });
 
         const emailBtn = document.getElementById('emailBtn');
-        const emailModal = document.getElementById('emailModal');
-        const modalClose = document.getElementById('modalClose');
-        const copyBtn = document.getElementById('copyBtn');
+        const toast = document.getElementById('toast');
 
-        emailBtn.addEventListener('click', () => {
-            emailModal.classList.add('active');
-        });
-
-        function closeModal() {
-            emailModal.classList.remove('active');
-            copyBtn.textContent = 'Copiar endereço';
-            copyBtn.classList.remove('copied');
-        }
-
-        modalClose.addEventListener('click', closeModal);
-        emailModal.addEventListener('click', (e) => {
-            if (e.target === emailModal) closeModal();
-        });
-
-        copyBtn.addEventListener('click', async () => {
+        emailBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
             try {
                 await navigator.clipboard.writeText('contato@viniciuscoimbra.com');
-                copyBtn.textContent = 'Copiado!';
-                copyBtn.classList.add('copied');
+                toast.textContent = 'E-mail copiado!';
             } catch {
-                copyBtn.textContent = 'Erro ao copiar';
+                toast.textContent = 'contato@viniciuscoimbra.com';
             }
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
         });
     </script>
 </body>
