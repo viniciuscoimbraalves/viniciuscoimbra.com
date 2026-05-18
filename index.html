@@ -139,19 +139,25 @@
             border-radius: 8px;
             padding: 0.5rem 0.75rem;
             display: none;
-            align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
+            flex-direction: column;
+            gap: 4px;
             font-size: 0.85rem;
             z-index: 10;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            white-space: nowrap;
         }
 
         .email-popover.show {
             display: flex;
         }
 
-        .email-popover span {
+        .email-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .email-row span {
             color: var(--text);
         }
 
