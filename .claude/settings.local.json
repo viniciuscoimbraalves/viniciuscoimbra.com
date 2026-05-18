@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git --version)",
+      "Bash(npm --version)",
+      "Bash(gh auth:*)",
+      "Bash(vercel --version)",
+      "Bash(vercel whoami:*)",
+      "Bash(git config:*)",
+      "Bash(gh repo:*)",
+      "Bash(vercel --prod --yes)",
+      "Bash(vercel domains:*)",
+      "Bash(vercel deploy:*)",
+      "Bash(npx vercel:*)",
+      "Skill(update-config)"
+    ]
+  }
+}
