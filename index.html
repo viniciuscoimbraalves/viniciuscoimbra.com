@@ -221,18 +221,29 @@
         });
 
         const emailBtn = document.getElementById('emailBtn');
-        const toast = document.getElementById('toast');
+        const popover = document.getElementById('emailPopover');
+        const copyBtn = document.getElementById('copyBtn');
 
-        emailBtn.addEventListener('click', async (e) => {
+        emailBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            popover.classList.toggle('show');
+        });
+
+        copyBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
             try {
                 await navigator.clipboard.writeText('contato@viniciuscoimbra.com');
-                toast.textContent = 'E-mail copiado!';
-            } catch {
-                toast.textContent = 'contato@viniciuscoimbra.com';
+                copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+                }, 1500);
+            } catch {}
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!emailBtn.contains(e.target)) {
+                popover.classList.remove('show');
             }
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
         });
     </script>
 </body>
