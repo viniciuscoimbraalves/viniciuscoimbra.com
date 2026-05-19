@@ -132,9 +132,10 @@
         }
 
         .email-popover {
-            position: fixed;
-            left: 50%;
-            transform: translateX(-50%);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            right: 0;
+            transform: none;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -262,12 +263,7 @@
 
         emailBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const isShowing = popover.classList.contains('show');
             popover.classList.toggle('show');
-            if (!isShowing) {
-                const rect = emailBtn.getBoundingClientRect();
-                popover.style.top = (rect.bottom + 8) + 'px';
-            }
         });
 
         document.querySelectorAll('.copy-btn').forEach(btn => {
