@@ -50,7 +50,20 @@
             align-items: flex-start;
             justify-content: center;
             padding-top: 15vh;
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            animation: fadeIn 0.6s ease both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .theme-toggle {
@@ -60,24 +73,24 @@
             color: var(--text-secondary);
             padding: 0;
             line-height: 1;
-            transition: color 0.2s;
+            transition: color 0.25s ease, transform 0.3s ease;
             margin-bottom: 60px;
+            opacity: 0.7;
         }
 
         .theme-toggle:hover {
             color: var(--text);
+            opacity: 1;
+            transform: rotate(12deg);
+        }
+
+        .theme-toggle:active {
+            transform: rotate(30deg) scale(0.92);
         }
 
         .theme-toggle svg {
             width: 42px;
             height: 42px;
-        }
-
-        .wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
         }
 
         .profile-pic {
@@ -87,8 +100,17 @@
             object-fit: cover;
             object-position: center;
             margin: 0 0 16px;
-            border: 2px solid var(--border);
+            border: 1.5px solid var(--border);
             filter: grayscale(100%);
+            transition: border-color 0.3s ease, transform 0.4s ease, filter 0.4s ease;
+            outline: 1px solid transparent;
+            outline-offset: 3px;
+        }
+
+        .profile-pic:hover {
+            border-color: var(--text-secondary);
+            transform: scale(1.03);
+            filter: grayscale(60%);
         }
 
         .nome {
@@ -96,22 +118,38 @@
             font-weight: 700;
             color: var(--text);
             margin-bottom: 4px;
+            letter-spacing: -0.01em;
         }
 
         .subtitle {
             font-size: 0.95rem;
             color: var(--text-secondary);
-            margin-bottom: 28px;
+            margin-bottom: 32px;
+            letter-spacing: 0.02em;
         }
 
         .links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             padding: 0 2rem;
             align-items: center;
             justify-content: center;
             position: relative;
         }
+
+        .links::before,
+        .links::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 32px;
+            height: 1px;
+            background: var(--border);
+            opacity: 0.5;
+        }
+
+        .links::before { right: calc(100% + 0.75rem); }
+        .links::after  { left: calc(100% + 0.75rem); }
 
         .link-btn {
             display: flex;
@@ -119,7 +157,7 @@
             justify-content: center;
             text-decoration: none;
             color: var(--text-secondary);
-            transition: color 0.2s, transform 0.2s;
+            transition: color 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .link-btn svg {
@@ -129,39 +167,58 @@
 
         .link-btn:hover {
             color: var(--text);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+        }
+
+        .link-btn:active {
+            transform: translateY(-1px) scale(0.95);
         }
 
         .email-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 100;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .email-overlay.show {
             display: flex;
+            animation: overlayIn 0.2s ease both;
+        }
+
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
 
         .email-modal {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
-            min-width: 280px;
+            gap: 0.4rem;
+            min-width: 300px;
+            animation: modalSlide 0.25s ease both;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(8px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .email-modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 0.25rem;
         }
 
         .email-modal-header h3 {
@@ -169,6 +226,7 @@
             font-weight: 700;
             color: var(--text);
             margin: 0;
+            letter-spacing: 0.02em;
         }
 
         .email-close-btn {
@@ -179,11 +237,13 @@
             padding: 4px;
             display: flex;
             align-items: center;
-            transition: color 0.2s;
+            transition: color 0.2s, transform 0.2s;
+            border-radius: 6px;
         }
 
         .email-close-btn:hover {
             color: var(--text);
+            transform: rotate(90deg);
         }
 
         .email-close-btn svg {
@@ -196,12 +256,18 @@
             align-items: center;
             justify-content: space-between;
             gap: 0.75rem;
-            padding: 0.25rem 0;
+            padding: 0.5rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .email-modal-row:first-of-type {
+            border-top: none;
         }
 
         .email-modal-row span {
             color: var(--text);
             font-size: 0.85rem;
+            letter-spacing: -0.01em;
         }
 
         .copy-btn {
@@ -209,15 +275,21 @@
             border: none;
             cursor: pointer;
             color: var(--text-secondary);
-            padding: 2px;
+            padding: 4px;
             display: flex;
             align-items: center;
-            transition: color 0.2s;
+            transition: color 0.2s, transform 0.2s;
             flex-shrink: 0;
+            border-radius: 6px;
         }
 
         .copy-btn:hover {
             color: var(--text);
+            transform: scale(1.1);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.9);
         }
 
         .copy-btn svg {
@@ -226,9 +298,13 @@
         }
 
         @media (max-width: 480px) {
-            .links { gap: 1.5rem; }
+            body { padding-top: 12vh; }
+            .links { gap: 1.75rem; }
             .link-btn svg { width: 36px; height: 36px; }
             .profile-pic { width: 62px; height: 62px; }
+            .theme-toggle { margin-bottom: 40px; }
+            .links::before, .links::after { display: none; }
+            .email-modal { min-width: unset; width: calc(100% - 2rem); }
         }
     </style>
 </head>
@@ -256,8 +332,7 @@
         <a href="https://www.instagram.com/viniciuscoimbraalves/" target="_blank" rel="noopener noreferrer" class="link-btn" aria-label="Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
         </a>
-        <a href="/textos/" class="link-btn" aria-label="Textos" style="text-decoration:none; color:var(--text-secondary); font-size:0.85rem; font-weight:700; letter-spacing:0.05em; transition:color 0.2s, transform 0.2s;" onmouseover="this.style.color='var(--text)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.transform='';">
-            TEXTOS
+        <a href="/textos/" class="link-btn" aria-label="Textos" style="text-decoration:none; color:var(--text-secondary); font-size:0.82rem; font-weight:700; letter-spacing:0.08em; transition:color 0.25s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.color='var(--text)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.transform='';">TEXTOS
         </a>
         </div>
     </div>
