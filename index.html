@@ -56,33 +56,24 @@
 
         .cursor-dot {
             position: fixed;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: var(--text);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background 0.2s;
         }
 
-        .cursor-ring {
+        .cursor-trail {
             position: fixed;
-            width: 36px;
-            height: 36px;
-            border: 1.5px solid var(--text-secondary);
-            border-radius: 50%;
             pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            z-index: 9995;
+            filter: blur(1px);
         }
 
-        .cursor-ring.hovering {
-            width: 52px;
-            height: 52px;
-            border-color: var(--text);
-            background: rgba(255,255,255,0.04);
+        .cursor-trail canvas {
+            display: block;
         }
 
         a, button, .link-btn, .copy-btn, .theme-toggle, .profile-pic {
@@ -91,7 +82,7 @@
 
         @media (hover: none) and (pointer: coarse) {
             body, a, button, .link-btn, .copy-btn, .theme-toggle, .profile-pic { cursor: auto; }
-            .cursor-dot, .cursor-ring { display: none; }
+            .cursor-dot, .cursor-trail { display: none; }
         }
 
         .wrapper {
@@ -352,7 +343,7 @@
 <body>
 
     <div class="cursor-dot" id="cursorDot"></div>
-    <div class="cursor-ring" id="cursorRing"></div>
+    <div class="cursor-trail" id="cursorTrail"><canvas id="trailCanvas"></canvas></div>
 
     <div class="wrapper">
         <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
@@ -460,11 +451,22 @@
             if (e.key === 'Escape') closeOverlay();
         });
 
-        /* ── Cursor follower ── */
+        /* ── Cursor cometa ── */
         const dot = document.getElementById('cursorDot');
-        const ring = document.getElementById('cursorRing');
+        const trailCanvas = document.getElementById('trailCanvas');
+        const ctx = trailCanvas.getContext('2d');
+
+        let w = trailCanvas.width = window.innerWidth;
+        let h = trailCanvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            w = trailCanvas.width = window.innerWidth;
+            h = trailCanvas.height = window.innerHeight;
+        });
+
+        let points = [];
+        const MAX_POINTS = 24;
         let mouseX = -100, mouseY = -100;
-        let ringX = -100, ringY = -100;
 
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
@@ -473,20 +475,49 @@
             dot.style.top = mouseY + 'px';
         });
 
-        function animateRing() {
-            ringX += (mouseX - ringX) * 0.15;
-            ringY += (mouseY - ringY) * 0.15;
-            ring.style.left = ringX + 'px';
-            ring.style.top = ringY + 'px';
-            requestAnimationFrame(animateRing);
-        }
-        animateRing();
-
-        /* Hover effect on interactive elements */
-        document.querySelectorAll('a, button, .link-btn, .copy-btn, .theme-toggle, .profile-pic').forEach(el => {
-            el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
+        document.addEventListener('mouseleave', () => {
+            mouseX = -100;
+            mouseY = -100;
         });
+
+        function getTrailColor() {
+            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+            return isDark ? '255,255,255' : '0,0,0';
+        }
+
+        function drawTrail() {
+            ctx.clearRect(0, 0, w, h);
+
+            if (mouseX < 0 || mouseY < 0) {
+                points = [];
+                requestAnimationFrame(drawTrail);
+                return;
+            }
+
+            points.push({ x: mouseX, y: mouseY });
+            if (points.length > MAX_POINTS) points.shift();
+
+            const len = points.length;
+            if (len < 2) { requestAnimationFrame(drawTrail); return; }
+
+            const rgb = getTrailColor();
+
+            for (let i = 1; i < len; i++) {
+                const alpha = (i / len) * 0.7;
+                const width = (i / len) * 5 + 1;
+
+                ctx.beginPath();
+                ctx.moveTo(points[i - 1].x, points[i - 1].y);
+                ctx.lineTo(points[i].x, points[i].y);
+                ctx.strokeStyle = `rgba(${rgb},${alpha})`;
+                ctx.lineWidth = width;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(drawTrail);
+        }
+        drawTrail();
     </script>
 </body>
 </html>
