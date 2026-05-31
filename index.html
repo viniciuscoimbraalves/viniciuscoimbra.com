@@ -53,26 +53,6 @@
             transition: background 0.4s ease, color 0.4s ease;
         }
 
-        .cursor-trail {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9995;
-            filter: blur(2px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .cursor-trail.visible {
-            opacity: 1;
-        }
-
-        .cursor-trail canvas {
-            display: block;
-        }
-
-        @media (hover: none) and (pointer: coarse) {
-            .cursor-trail { display: none; }
-        }
 
         .wrapper {
             display: flex;
@@ -331,8 +311,6 @@
 </head>
 <body>
 
-    <div class="cursor-trail" id="cursorTrail"><canvas id="trailCanvas"></canvas></div>
-
     <div class="wrapper">
         <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
             <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -439,85 +417,6 @@
             if (e.key === 'Escape') closeOverlay();
         });
 
-        /* ── Cometa (rastro que aparece ao mover o mouse) ── */
-        const trailEl = document.getElementById('cursorTrail');
-        const trailCanvas = document.getElementById('trailCanvas');
-        const ctx = trailCanvas.getContext('2d');
-
-        let w = trailCanvas.width = window.innerWidth;
-        let h = trailCanvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            w = trailCanvas.width = window.innerWidth;
-            h = trailCanvas.height = window.innerHeight;
-        });
-
-        let points = [];
-        const MAX_POINTS = 48;
-        let mouseX = -100, mouseY = -100;
-        let moved = false;
-        let fadeTimer = null;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            moved = true;
-            trailEl.classList.add('visible');
-            clearTimeout(fadeTimer);
-            fadeTimer = setTimeout(() => {
-                moved = false;
-                setTimeout(() => {
-                    if (!moved) trailEl.classList.remove('visible');
-                }, 150);
-            }, 80);
-        });
-
-        document.addEventListener('mouseleave', () => {
-            mouseX = -100;
-            mouseY = -100;
-            moved = false;
-            trailEl.classList.remove('visible');
-        });
-
-        function getTrailColor() {
-            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-            return isDark ? '255,255,255' : '0,0,0';
-        }
-
-        function drawTrail() {
-            ctx.clearRect(0, 0, w, h);
-
-            if (mouseX < 0 || mouseY < 0) {
-                points = [];
-                requestAnimationFrame(drawTrail);
-                return;
-            }
-
-            points.push({ x: mouseX, y: mouseY });
-            if (points.length > MAX_POINTS) points.shift();
-
-            const len = points.length;
-            if (len < 2) { requestAnimationFrame(drawTrail); return; }
-
-            const rgb = getTrailColor();
-
-            for (let i = 1; i < len; i++) {
-                const t = i / len;
-                const alpha = t * t * 0.6;
-                const width = (t * 6 + 1) * 1.3;
-
-                ctx.beginPath();
-                ctx.moveTo(points[i - 1].x, points[i - 1].y);
-                ctx.lineTo(points[i].x, points[i].y);
-                ctx.strokeStyle = `rgba(${rgb},${alpha})`;
-                ctx.lineWidth = width;
-                ctx.lineCap = 'round';
-                ctx.stroke();
-            }
-
-            requestAnimationFrame(drawTrail);
-        }
-        drawTrail();
     </script>
 </body>
 </html>
