@@ -51,38 +51,27 @@
             justify-content: center;
             padding-top: 15vh;
             transition: background 0.4s ease, color 0.4s ease;
-            cursor: none;
-        }
-
-        .cursor-dot {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: var(--text);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
         }
 
         .cursor-trail {
             position: fixed;
             pointer-events: none;
             z-index: 9995;
-            filter: blur(1px);
+            filter: blur(2px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cursor-trail.visible {
+            opacity: 1;
         }
 
         .cursor-trail canvas {
             display: block;
         }
 
-        a, button, .link-btn, .copy-btn, .theme-toggle, .profile-pic {
-            cursor: none;
-        }
-
         @media (hover: none) and (pointer: coarse) {
-            body, a, button, .link-btn, .copy-btn, .theme-toggle, .profile-pic { cursor: auto; }
-            .cursor-dot, .cursor-trail { display: none; }
+            .cursor-trail { display: none; }
         }
 
         .wrapper {
@@ -342,7 +331,6 @@
 </head>
 <body>
 
-    <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-trail" id="cursorTrail"><canvas id="trailCanvas"></canvas></div>
 
     <div class="wrapper">
@@ -451,8 +439,8 @@
             if (e.key === 'Escape') closeOverlay();
         });
 
-        /* ── Cursor cometa ── */
-        const dot = document.getElementById('cursorDot');
+        /* ── Cometa (rastro que aparece ao mover o mouse) ── */
+        const trailEl = document.getElementById('cursorTrail');
         const trailCanvas = document.getElementById('trailCanvas');
         const ctx = trailCanvas.getContext('2d');
 
@@ -465,19 +453,30 @@
         });
 
         let points = [];
-        const MAX_POINTS = 24;
+        const MAX_POINTS = 48;
         let mouseX = -100, mouseY = -100;
+        let moved = false;
+        let fadeTimer = null;
 
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            dot.style.left = mouseX + 'px';
-            dot.style.top = mouseY + 'px';
+            moved = true;
+            trailEl.classList.add('visible');
+            clearTimeout(fadeTimer);
+            fadeTimer = setTimeout(() => {
+                moved = false;
+                setTimeout(() => {
+                    if (!moved) trailEl.classList.remove('visible');
+                }, 150);
+            }, 80);
         });
 
         document.addEventListener('mouseleave', () => {
             mouseX = -100;
             mouseY = -100;
+            moved = false;
+            trailEl.classList.remove('visible');
         });
 
         function getTrailColor() {
@@ -503,8 +502,9 @@
             const rgb = getTrailColor();
 
             for (let i = 1; i < len; i++) {
-                const alpha = (i / len) * 0.7;
-                const width = (i / len) * 5 + 1;
+                const t = i / len;
+                const alpha = t * t * 0.6;
+                const width = t * 6 + 1;
 
                 ctx.beginPath();
                 ctx.moveTo(points[i - 1].x, points[i - 1].y);
