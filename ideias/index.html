@@ -238,16 +238,115 @@
             font-size: 0.9rem;
             padding: 1rem 0;
         }
+
+        /* ---- password modal ---- */
+        .pass-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            animation: overlayIn 0.3s ease both;
+        }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        .pass-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem 2.5rem 2.5rem;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+            text-align: center;
+            animation: modalSlide 0.3s ease both;
+            max-width: 400px;
+            width: calc(100% - 2rem);
+        }
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(12px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .pass-modal h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .pass-modal p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+        }
+        .pass-input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.25s ease;
+            margin-bottom: 0.75rem;
+        }
+        .pass-input:focus {
+            border-color: var(--text-secondary);
+        }
+        .pass-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+        .pass-submit {
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.25s ease, transform 0.15s ease;
+        }
+        .pass-submit:hover {
+            opacity: 0.85;
+        }
+        .pass-submit:active {
+            transform: scale(0.97);
+        }
+        .pass-error {
+            font-size: 0.8rem;
+            color: #e74c3c;
+            margin-top: 0.5rem;
+            min-height: 1.2em;
+        }
+
         @media (max-width: 480px) {
             .wrapper { padding: 1.5rem 1.25rem; }
             .filtros { gap: 0.3rem; }
             .filtro-btn { font-size: 0.82rem; padding: 0.3rem 0.6rem; border-radius: 16px; }
             .noticia-card { padding: 0.7rem 0.9rem; }
             .back svg { width: 24px; height: 24px; }
+            .pass-modal { padding: 1.5rem 1.5rem 2rem; }
         }
     </style>
 </head>
 <body>
+    <div class="pass-overlay" id="passOverlay">
+        <div class="pass-modal">
+            <h2>acesso restrito</h2>
+            <p>digite a senha para continuar</p>
+            <input type="password" class="pass-input" id="passInput" placeholder="senha" autofocus>
+            <button class="pass-submit" id="passSubmit">entrar</button>
+            <div class="pass-error" id="passError"></div>
+        </div>
+    </div>
     <div class="wrapper" id="app">
         <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
             <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -270,21 +369,43 @@
     <script>
         /* ---- password gate ---- */
         (function() {
-            var hash = '4ed2e9d7e8c31fc4a07c7c3f8d8cc57ec366823a2e0da3d9a4daafce0ca4d2e5';
-            async function checkPass() {
-                var input = prompt('Digite a senha para acessar esta página:');
-                if (!input) { window.location.href = '/'; return; }
-                var enc = new TextEncoder();
-                var data = enc.encode(input);
-                var buf = await crypto.subtle.digest('SHA-256', data);
-                var arr = Array.from(new Uint8Array(buf));
-                var hex = arr.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
-                if (hex !== hash) {
-                    alert('Senha incorreta.');
-                    window.location.href = '/';
-                }
+            var hash = '6428370e174c05ed8feb43af78979da83428c5fc4b6f4a48b4ad360586358637';
+            var overlay = document.getElementById('passOverlay');
+            var input = document.getElementById('passInput');
+            var submit = document.getElementById('passSubmit');
+            var error = document.getElementById('passError');
+            var autenticado = sessionStorage.getItem('ideias_auth');
+
+            if (autenticado === '1') {
+                overlay.style.display = 'none';
             }
-            checkPass();
+
+            function tentar() {
+                var val = input.value;
+                if (!val) { error.textContent = 'digite a senha'; return; }
+                submit.disabled = true;
+                submit.textContent = 'verificando...';
+                var enc = new TextEncoder();
+                crypto.subtle.digest('SHA-256', enc.encode(val)).then(function(buf) {
+                    var arr = Array.from(new Uint8Array(buf));
+                    var hex = arr.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+                    if (hex === hash) {
+                        sessionStorage.setItem('ideias_auth', '1');
+                        overlay.style.display = 'none';
+                    } else {
+                        error.textContent = 'senha incorreta';
+                        submit.disabled = false;
+                        submit.textContent = 'entrar';
+                        input.value = '';
+                        input.focus();
+                    }
+                });
+            }
+
+            submit.addEventListener('click', tentar);
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') tentar();
+            });
         })();
 
         /* ---- theme ---- */
