@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMY1P57808"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HMY1P57808');
+    </script>
+    <meta name="robots" content="noindex, nofollow">
+    <title>ideias — Vinicius Coimbra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --border: #1f1f1f;
+            --text: #f5f5f5;
+            --text-secondary: #888;
+            --card-bg: #1a1a1a;
+        }
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --surface: #f5f5f5;
+            --border: #e5e5e5;
+            --text: #0a0a0a;
+            --text-secondary: #666;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        .wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            animation: fadeIn 0.5s ease both;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.25s ease, gap 0.25s ease;
+            margin-bottom: 1.5rem;
+        }
+        .back:hover {
+            color: var(--text);
+            gap: 0.5rem;
+        }
+        .back svg {
+            width: 20px;
+            height: 20px;
+        }
+        .header-group {
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.01em;
+        }
+        .sub {
+            font-size: 1.0rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .filtros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 2rem;
+        }
+        .filtro-btn {
+            padding: 0.35rem 0.8rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, transform 0.2s ease;
+        }
+        .filtro-btn:hover {
+            color: var(--text);
+            border-color: var(--text-secondary);
+            transform: translateY(-1px);
+        }
+        .filtro-btn:active {
+            transform: scale(0.96);
+        }
+        .filtro-btn.ativo {
+            color: var(--text);
+            border-color: var(--text);
+            background: var(--surface);
+        }
+        .filtro-btn:disabled {
+            opacity: 0.5;
+            cursor: wait;
+            transform: none;
+        }
+        .ano-section {
+            display: none;
+        }
+        .ano-section.ativo {
+            display: block;
+        }
+        .noticia-card {
+            display: block;
+            width: 100%;
+            padding: 0.85rem 1.1rem;
+            margin-bottom: 0.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.0rem;
+            cursor: pointer;
+            transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+            text-align: left;
+            font-family: inherit;
+        }
+        .noticia-card:hover {
+            border-color: var(--text-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .noticia-card:active {
+            transform: translateY(0);
+        }
+        .noticia-card .tag-cartola {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 3px;
+        }
+        .noticia-card .titulo {
+            font-weight: 600;
+            margin-bottom: 3px;
+            line-height: 1.45;
+        }
+        .noticia-card .data-noticia {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+        .noticia-expandido {
+            display: none;
+            padding: 0 1.1rem 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-top: -0.3rem;
+            margin-bottom: 0.5rem;
+        }
+        .noticia-expandido.visivel {
+            display: block;
+        }
+        .noticia-expandido .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-top: 0.7rem;
+            margin-bottom: 0.15rem;
+        }
+        .noticia-expandido .corpo {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text);
+            white-space: pre-line;
+        }
+        .noticia-expandido .link-noticia {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .noticia-expandido .link-noticia:hover {
+            color: var(--text);
+            text-decoration: underline;
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            line-height: 1;
+            transition: color 0.25s ease, transform 0.3s ease;
+            display: block;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+        .theme-toggle:hover {
+            color: var(--text);
+            opacity: 1;
+            transform: rotate(12deg);
+        }
+        .theme-toggle:active {
+            transform: rotate(30deg) scale(0.92);
+        }
+        .theme-toggle svg {
+            width: 28px;
+            height: 28px;
+        }
+        .loading-msg {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 1rem 0;
+        }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            padding: 1rem 0;
+        }
+        @media (max-width: 480px) {
+            .wrapper { padding: 1.5rem 1.25rem; }
+            .filtros { gap: 0.3rem; }
+            .filtro-btn { font-size: 0.82rem; padding: 0.3rem 0.6rem; border-radius: 16px; }
+            .noticia-card { padding: 0.7rem 0.9rem; }
+            .back svg { width: 24px; height: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper" id="app">
+        <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+            <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+        <a href="/" class="back" aria-label="Voltar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            voltar
+        </a>
+        <div class="header-group">
+            <h1>ideias</h1>
+            <p class="sub">banco de notícias do GHC</p>
+        </div>
+
+        <div class="filtros" id="filtros"></div>
+        <div id="conteudo"></div>
+    </div>
+
+    <script>
+        /* ---- password gate ---- */
+        (function() {
+            var hash = '4ed2e9d7e8c31fc4a07c7c3f8d8cc57ec366823a2e0da3d9a4daafce0ca4d2e5';
+            async function checkPass() {
+                var input = prompt('Digite a senha para acessar esta página:');
+                if (!input) { window.location.href = '/'; return; }
+                var enc = new TextEncoder();
+                var data = enc.encode(input);
+                var buf = await crypto.subtle.digest('SHA-256', data);
+                var arr = Array.from(new Uint8Array(buf));
+                var hex = arr.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+                if (hex !== hash) {
+                    alert('Senha incorreta.');
+                    window.location.href = '/';
+                }
+            }
+            checkPass();
+        })();
+
+        /* ---- theme ---- */
+        var html = document.documentElement;
+        var savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+
+        var themeToggle = document.getElementById('themeToggle');
+        var themeIcon = document.getElementById('themeIcon');
+
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            var isDark = theme === 'dark';
+            themeIcon.innerHTML = isDark
+                ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+                : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+            localStorage.setItem('theme', theme);
+        }
+
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', function() {
+            setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+
+        /* ---- data loader ---- */
+        var anos = [2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011];
+        var filtrosEl = document.getElementById('filtros');
+        var conteudoEl = document.getElementById('conteudo');
+        var cache = {};
+        var anoAtivo = null;
+
+        function criarBotoes() {
+            var html = '<button class="filtro-btn" data-ano="todas">Todas</button>';
+            anos.forEach(function(a) {
+                html += '<button class="filtro-btn" data-ano="' + a + '">' + a + '</button>';
+            });
+            filtrosEl.innerHTML = html;
+
+            filtrosEl.querySelectorAll('.filtro-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    if (btn.disabled) return;
+                    filtrosEl.querySelectorAll('.filtro-btn').forEach(function(b) { b.classList.remove('ativo'); });
+                    btn.classList.add('ativo');
+                    var ano = btn.getAttribute('data-ano');
+                    carregarAno(ano);
+                });
+            });
+        }
+
+        function carregarAno(ano) {
+            if (ano === 'todas') {
+                carregarTodas();
+                return;
+            }
+            anoAtivo = ano;
+            if (cache[ano]) {
+                renderizarAno(ano, cache[ano]);
+                return;
+            }
+            conteudoEl.innerHTML = '<div class="loading-msg">Carregando...</div>';
+            var btn = filtrosEl.querySelector('[data-ano="' + ano + '"]');
+            if (btn) btn.disabled = true;
+
+            fetch('data_' + ano + '.json')
+                .then(function(r) {
+                    if (!r.ok) throw new Error('Erro HTTP ' + r.status);
+                    return r.json();
+                })
+                .then(function(data) {
+                    cache[ano] = data;
+                    renderizarAno(ano, data);
+                })
+                .catch(function(err) {
+                    conteudoEl.innerHTML = '<div class="error-msg">Erro ao carregar dados: ' + err.message + '</div>';
+                })
+                .finally(function() {
+                    if (btn) btn.disabled = false;
+                });
+        }
+
+        function carregarTodas() {
+            anoAtivo = 'todas';
+            conteudoEl.innerHTML = '<div class="loading-msg">Carregando todas as notícias...</div>';
+            var anosParaCarregar = anos.filter(function(a) { return !cache[a]; });
+            if (anosParaCarregar.length === 0) {
+                renderizarTodas();
+                return;
+            }
+
+            var pendentes = anosParaCarregar.length;
+            anosParaCarregar.forEach(function(ano) {
+                fetch('data_' + ano + '.json')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        cache[ano] = data;
+                        pendentes--;
+                        if (pendentes === 0) renderizarTodas();
+                    })
+                    .catch(function() {
+                        pendentes--;
+                        if (pendentes === 0) renderizarTodas();
+                    });
+            });
+        }
+
+        function renderizarAno(ano, data) {
+            var h = '';
+            data.forEach(function(item, idx) {
+                var subtituloHtml = item.s ? '<div class="label">subtítulo</div><div>' + escHtml(item.s) + '</div>' : '';
+                h += '<div class="noticia-wrapper" data-ano="' + ano + '">'
+                   + '<button class="noticia-card" data-idx="' + idx + '" data-ano="' + ano + '">'
+                   + '<div class="tag-cartola">' + escHtml(item.c) + '</div>'
+                   + '<div class="titulo">' + escHtml(item.t) + '</div>'
+                   + '<div class="data-noticia">' + escHtml(item.d) + '</div>'
+                   + '</button>'
+                   + '<div class="noticia-expandido" id="exp-' + ano + '-' + idx + '">'
+                   + '<div class="label">cartola</div><div>' + escHtml(item.c) + '</div>'
+                   + '<div class="label">data</div><div>' + escHtml(item.d) + '</div>'
+                   + '<div class="label">título</div><div>' + escHtml(item.t) + '</div>'
+                   + subtituloHtml
+                   + '<div class="label">corpo</div><div class="corpo">' + escHtml(item.b) + '</div>'
+                   + '<a href="' + escAttr(item.l) + '" target="_blank" rel="noopener noreferrer" class="link-noticia">ler original →</a>'
+                   + '</div></div>';
+            });
+            conteudoEl.innerHTML = h;
+
+            conteudoEl.querySelectorAll('.noticia-card').forEach(function(card) {
+                card.addEventListener('click', function() {
+                    var idx = card.getAttribute('data-idx');
+                    var a = card.getAttribute('data-ano');
+                    var exp = document.getElementById('exp-' + a + '-' + idx);
+                    if (exp) exp.classList.toggle('visivel');
+                });
+            });
+        }
+
+        function renderizarTodas() {
+            var h = '';
+            anos.forEach(function(ano) {
+                var data = cache[ano];
+                if (!data || data.length === 0) return;
+                h += '<div class="ano-section ativo" style="display:block;margin-bottom:1.5rem;">'
+                   + '<h2 style="font-size:1.1rem;font-weight:700;margin-bottom:0.6rem;color:var(--text-secondary);letter-spacing:0.02em;">' + ano + ' <span style="font-weight:400;font-size:0.85rem;color:var(--text-secondary);">(' + data.length + ')</span></h2>';
+                data.forEach(function(item, idx) {
+                    var subtituloHtml = item.s ? '<div class="label">subtítulo</div><div>' + escHtml(item.s) + '</div>' : '';
+                    h += '<div class="noticia-wrapper">'
+                       + '<button class="noticia-card" data-idx="' + idx + '" data-ano="' + ano + '">'
+                       + '<div class="tag-cartola">' + escHtml(item.c) + '</div>'
+                       + '<div class="titulo">' + escHtml(item.t) + '</div>'
+                       + '<div class="data-noticia">' + escHtml(item.d) + '</div>'
+                       + '</button>'
+                       + '<div class="noticia-expandido" id="exp-todas-' + ano + '-' + idx + '">'
+                       + '<div class="label">cartola</div><div>' + escHtml(item.c) + '</div>'
+                       + '<div class="label">data</div><div>' + escHtml(item.d) + '</div>'
+                       + '<div class="label">título</div><div>' + escHtml(item.t) + '</div>'
+                       + subtituloHtml
+                       + '<div class="label">corpo</div><div class="corpo">' + escHtml(item.b) + '</div>'
+                       + '<a href="' + escAttr(item.l) + '" target="_blank" rel="noopener noreferrer" class="link-noticia">ler original →</a>'
+                       + '</div></div>';
+                });
+                h += '</div>';
+            });
+            conteudoEl.innerHTML = h;
+
+            conteudoEl.querySelectorAll('.noticia-card').forEach(function(card) {
+                card.addEventListener('click', function() {
+                    var idx = card.getAttribute('data-idx');
+                    var a = card.getAttribute('data-ano');
+                    var exp = document.getElementById('exp-todas-' + a + '-' + idx);
+                    if (exp) exp.classList.toggle('visivel');
+                });
+            });
+        }
+
+        function escHtml(s) {
+            if (!s) return '';
+            var d = document.createElement('div');
+            d.appendChild(document.createTextNode(s));
+            return d.innerHTML;
+        }
+
+        function escAttr(s) {
+            if (!s) return '#';
+            return s.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        criarBotoes();
+        // Auto-carregar ano mais recente
+        carregarAno('2026');
+        var btn2026 = filtrosEl.querySelector('[data-ano="2026"]');
+        if (btn2026) btn2026.classList.add('ativo');
+    </script>
+</body>
+</html>
