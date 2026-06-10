@@ -479,7 +479,7 @@
             var btn = filtrosEl.querySelector('[data-ano="' + ano + '"]');
             if (btn) btn.disabled = true;
 
-            fetch('data_' + ano + '.json')
+            fetch('./data_' + ano + '.json')
                 .then(function(r) {
                     if (!r.ok) throw new Error('Erro HTTP ' + r.status);
                     return r.json();
@@ -507,7 +507,7 @@
 
             var pendentes = anosParaCarregar.length;
             anosParaCarregar.forEach(function(ano) {
-                fetch('data_' + ano + '.json')
+                fetch('./data_' + ano + '.json')
                     .then(function(r) { return r.json(); })
                     .then(function(data) {
                         cache[ano] = data;
